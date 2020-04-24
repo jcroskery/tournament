@@ -1,0 +1,9 @@
+.border {
+    border: 1px solid black;
+}
+.large {
+    font-size: 2em;
+}
+.medium_large {
+    font-size: 1.5em;
+}
