@@ -1,10 +1,7 @@
 use Stage::*;
 
 use gtk::prelude::*;
-use gtk::{Builder, Button, Label, Separator};
-
-use std::rc::Rc;
-use std::cell::RefCell;
+use gtk::{Builder, Button, Label};
 
 const RACERS: usize = 5;
 
@@ -58,6 +55,7 @@ impl Player {
     }
 }
 
+#[derive(Clone)]
 struct Race {
     racer_1: String,
     racer_2: String,
@@ -97,7 +95,6 @@ impl Tournament {
         for i in 0..RACERS {
             for j in (i + 1)..RACERS {
                 races.push(Race::new(&names[i].name, &names[j].name, race, 1, 1));
-                race += 1;
             }
         }
         Tournament {
@@ -127,6 +124,17 @@ impl Tournament {
             })
             .collect()
     }
+    pub fn next_race(&mut self) {
+        self.race += 1;
+        let mut deleted = 0;
+        self.races = self.races.iter_mut().filter(|x| {
+            deleted += 1;
+            deleted != 1
+        }).map(|x| x.clone()).collect();
+        if self.races.len() == 0 {
+            panic!();
+        }
+    }
     fn cull_player(&mut self) -> bool {
         let original_length = self.names.len();
         self.names = self
@@ -140,7 +148,7 @@ impl Tournament {
 }
 
 pub struct Display {
-    tournament: Tournament,
+    pub tournament: Tournament,
     pub refresh: Button,
     ranks: Vec<Label>,
     pub win_button_1: Button,
@@ -173,16 +181,17 @@ impl Display {
             builder,
         }
     }
-    pub fn display_race(&self, race: usize) {
-        let racer_1 = self.tournament.races[race - 1].racer_1.clone();
-        let racer_2 = self.tournament.races[race - 1].racer_2.clone();
+    pub fn display_race(&self) {
+        let race = self.tournament.race;
+        let racer_1 = self.tournament.races[0].racer_1.clone();
+        let racer_2 = self.tournament.races[0].racer_2.clone();
         self.win_button_1.set_label(&format!("{} won", racer_1));
         self.win_button_2.set_label(&format!("{} won", racer_2));
         self.vs.set_text(&format!("{} vs {}", racer_1, racer_2));
         self.current_races.set_text(&format!(
             "Race {} of {}",
-            self.tournament.races[race - 1].sub_race,
-            self.tournament.races[race - 1].length
+            self.tournament.races[0].sub_race,
+            self.tournament.races[0].length
         ));
         self.race.set_text(&format!("Race {}:", race));
     }
