@@ -29,14 +29,6 @@ impl Stage {
             GOLD => "200 ccs".to_string(),
         }
     }
-    fn get_number_of_races(&self) -> usize {
-        match self {
-            GROUP => 1,
-            SEMI => 4,
-            BRONZE => 4,
-            GOLD => 4,
-        }
-    }
     fn next_stage(&mut self) -> bool {
         match self {
             GROUP => {
@@ -237,7 +229,6 @@ pub struct Display {
     ccs: Label,
     current_races: Label,
     stage: Label,
-    builder: Builder,
 }
 
 impl Display {
@@ -257,7 +248,6 @@ impl Display {
             ccs: builder.get_object("ccs").unwrap(),
             current_races: builder.get_object("current_races").unwrap(),
             stage: builder.get_object("stage").unwrap(),
-            builder,
         }
     }
     pub fn display_race(&self) {
