@@ -143,7 +143,6 @@ pub struct Display {
     tournament: Tournament,
     pub refresh: Button,
     ranks: Vec<Label>,
-    separators: Vec<Separator>,
     pub win_button_1: Button,
     pub win_button_2: Button,
     race: Label,
@@ -160,15 +159,10 @@ impl Display {
         for i in 0..RACERS {
             ranks.push(builder.get_object(&format!("rank_{}", i)).unwrap());
         }
-        let mut separators = vec![];
-        for i in 1..RACERS {
-            separators.push(builder.get_object(&format!("separator_{}", i)).unwrap());
-        }
         Display {
             tournament,
             refresh: builder.get_object("refresh").unwrap(),
             ranks,
-            separators,
             win_button_1: builder.get_object("win_button_1").unwrap(),
             win_button_2: builder.get_object("win_button_2").unwrap(),
             race: builder.get_object("race").unwrap(),

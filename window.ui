@@ -169,9 +169,6 @@
                 <property name="margin_top">2</property>
                 <property name="margin_bottom">2</property>
                 <property name="label" translatable="yes">#5: Daddy</property>
-                <style>
-                  <class name="red"/>
-                </style>
               </object>
               <packing>
                 <property name="expand">False</property>
