@@ -178,19 +178,19 @@ impl Tournament {
         if is_there_a_next_stage {
             match self.stage {
                 SEMI => {
-                    self.add_semi_races();
                     self.clear_player_scores();
+                    self.add_semi_races();
                 },
                 BRONZE => {
-                    self.add_bronze_races();
                     self.clear_player_scores();
+                    self.add_bronze_races();
                     for i in 0..2 {
                         self.names[i].score = 10;
                     }
                 },
                 GOLD => {
-                    self.add_gold_races();
                     self.clear_player_scores();
+                    self.add_gold_races();
                 },
                 GROUP => unreachable!()
             }
