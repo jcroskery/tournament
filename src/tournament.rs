@@ -37,6 +37,25 @@ impl Stage {
             GOLD => 4,
         }
     }
+    fn next_stage(&mut self) -> bool {
+        match self {
+            GROUP => {
+                *self = SEMI;
+                true
+            },
+            SEMI => {
+                *self = BRONZE;
+                true
+            },
+            BRONZE => {
+                *self = GOLD;
+                true
+            },
+            GOLD => {
+                false
+            }
+        }
+    }
 }
 
 #[derive(Clone)]
@@ -80,6 +99,7 @@ pub struct Tournament {
     names: Vec<Player>,
     race: usize,
     races: Vec<Race>,
+    pub over: bool,
 }
 impl Tournament {
     pub fn new() -> Self {
@@ -103,6 +123,7 @@ impl Tournament {
             names,
             race: 1,
             races,
+            over: false,
         }
     }
     fn rank_players(&mut self) -> Vec<Player> {
@@ -125,6 +146,14 @@ impl Tournament {
                 a.clone()
             })
             .collect()
+    }
+    pub fn next_stage(&mut self) -> bool {
+        let is_there_a_next_stage = self.stage.next_stage();
+        if is_there_a_next_stage {
+            
+        }
+        is_there_a_next_stage;
+        false
     }
     pub fn next_race(&mut self) -> bool {
         self.race += 1;

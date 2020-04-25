@@ -33,17 +33,33 @@ fn main() {
         let display_3 = display_2.clone();
         win_button_1.connect_clicked(move |_| {
             let mut display = display_1.borrow_mut();
-            display.tournament.record_winner(true);
-            display.tournament.next_race();
-            display.display_race();
-            display.display_ranks();
+            if !display.tournament.over {
+                display.tournament.record_winner(true);
+            }
+            if !display.tournament.next_race() {
+                if !display.tournament.next_stage() {
+                    display.tournament.over = true;
+                }
+            }
+            if !display.tournament.over {
+                display.display_race();
+                display.display_ranks();
+            }
         });
         win_button_2.connect_clicked(move |_| {
             let mut display = display_2.borrow_mut();
-            display.tournament.record_winner(false);
-            display.tournament.next_race();
-            display.display_race();
-            display.display_ranks();
+            if !display.tournament.over {
+                display.tournament.record_winner(false);
+            }
+            if !display.tournament.next_race() {
+                if !display.tournament.next_stage() {
+                    display.tournament.over = true;
+                }
+            }
+            if !display.tournament.over {
+                display.display_race();
+                display.display_ranks();
+            }
         });
         refresh.connect_clicked(move |_| {
             let display = display_3.borrow();
