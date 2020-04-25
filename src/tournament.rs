@@ -8,6 +8,7 @@ const RACERS: usize = 5;
 #[derive(Clone, PartialEq)]
 enum Stage {
     GROUP,
+    TIEBREAKER,
     SEMI,
     BRONZE,
     GOLD,
@@ -16,6 +17,7 @@ impl Stage {
     fn to_string(&self) -> String {
         match self {
             GROUP => "Group Stage".to_string(),
+            TIEBREAKER => "Tiebreaker Stage".to_string(),
             SEMI => "Semifinal Stage".to_string(),
             BRONZE => "Bronze Medal Match".to_string(),
             GOLD => "Gold Medal Match".to_string(),
@@ -24,6 +26,7 @@ impl Stage {
     fn get_ccs(&self) -> String {
         match self {
             GROUP => "100 ccs".to_string(),
+            TIEBREAKER => "100 ccs".to_string(),
             SEMI => "150 ccs".to_string(),
             BRONZE => "150 ccs".to_string(),
             GOLD => "200 ccs".to_string(),
@@ -35,6 +38,10 @@ impl Stage {
                 *self = SEMI;
                 true
             },
+            TIEBREAKER => {
+                *self = SEMI;
+                true
+            }
             SEMI => {
                 *self = BRONZE;
                 true
@@ -147,7 +154,26 @@ impl Tournament {
         }
     }
     fn add_tiebreaker_races(&mut self) {
-
+        self.rank_players();
+        let mut lowest_rank = 1;
+        let new_players: Vec<_> = self.names.iter_mut().rev().filter_map(|x| {
+            if x.rank > lowest_rank {
+                lowest_rank = x.rank;
+                Some(x)
+            } else if x.rank != lowest_rank {
+                x.score += 10;
+                return None;
+            } else {
+                return Some(x)
+            }
+        }).collect();
+        let mut race = self.race + 1;
+        for i in 0..new_players.len() {
+            for j in (i + 1)..new_players.len() {
+                self.races.push(Race::new(&new_players[i].name, &new_players[j].name, race, 1));
+                race += 1;
+            }
+        }
     }
     fn add_bronze_races(&mut self) {
         self.rank_players();
@@ -163,10 +189,11 @@ impl Tournament {
         }
     }
     pub fn next_stage(&mut self) -> bool {
-        if self.stage == GROUP {
+        if self.stage == GROUP || self.stage == TIEBREAKER {
             if !self.cull_player() {
+                self.stage = TIEBREAKER;
                 self.add_tiebreaker_races();
-                return false;
+                return true;
             } 
         }
         let is_there_a_next_stage = self.stage.next_stage();
@@ -185,7 +212,7 @@ impl Tournament {
                 GOLD => {
                     self.add_gold_races();
                 },
-                GROUP => unreachable!()
+                GROUP | TIEBREAKER => unreachable!()
             }
         }
         is_there_a_next_stage
