@@ -1,22 +1,25 @@
+use gdk::Screen;
 use gio::prelude::*;
 use gtk::prelude::*;
-use gdk::Screen;
 use gtk::{Application, ApplicationWindow, Builder, CssProvider, StyleContext, Window};
 
-use std::rc::Rc;
 use std::cell::RefCell;
+use std::rc::Rc;
 
 mod tournament;
 use tournament::{Display, Tournament};
 
 fn main() {
-    let application = Application::new(Some("tk.olmmcc.tournament"), gio::ApplicationFlags::FLAGS_NONE)
-        .expect("Application initialization failed!");
+    let application = Application::new(
+        Some("tk.olmmcc.tournament"),
+        gio::ApplicationFlags::FLAGS_NONE,
+    )
+    .expect("Application initialization failed!");
     application.connect_activate(|application| {
         ApplicationWindow::new(application);
         let css = CssProvider::new();
         css.load_from_data(&include_str!("../tournament.css").as_bytes())
-        .unwrap_or_default();
+            .unwrap_or_default();
         StyleContext::add_provider_for_screen(&Screen::get_default().unwrap(), &css, 1);
         let builder = Builder::new_from_string(include_str!("../window.ui"));
         let window: Window = builder.get_object("mainWindow").unwrap();
@@ -35,30 +38,42 @@ fn main() {
             let mut display = display_1.borrow_mut();
             if !display.tournament.over {
                 display.tournament.record_winner(true);
-            }
-            if !display.tournament.next_race() {
-                if !display.tournament.next_stage() {
-                    display.tournament.over = true;
+                if !display.tournament.next_race() {
+                    if !display.tournament.next_stage() {
+                        display.tournament.over = true;
+                        display.tournament.rank_players();
+                        display.display_ranks();
+                    } else {
+                        display.display_ranks();
+                        display.display_race();
+                        display.display_stage();
+                    }
+                } else {
+                    display.tournament.rank_players();
+                    display.display_ranks();
+                    display.display_race();
                 }
-            }
-            if !display.tournament.over {
-                display.display_ranks();
-                display.display_race();
             }
         });
         win_button_2.connect_clicked(move |_| {
             let mut display = display_2.borrow_mut();
             if !display.tournament.over {
                 display.tournament.record_winner(false);
-            }
-            if !display.tournament.next_race() {
-                if !display.tournament.next_stage() {
-                    display.tournament.over = true;
+                if !display.tournament.next_race() {
+                    if !display.tournament.next_stage() {
+                        display.tournament.over = true;
+                        display.tournament.rank_players();
+                        display.display_ranks();
+                    } else {
+                        display.display_ranks();
+                        display.display_stage();
+                        display.display_race();
+                    }
+                } else {
+                    display.tournament.rank_players();
+                    display.display_ranks();
+                    display.display_race();
                 }
-            }
-            if !display.tournament.over {
-                display.display_ranks();
-                display.display_race();
             }
         });
         refresh.connect_clicked(move |_| {

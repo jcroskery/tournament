@@ -59,7 +59,7 @@ impl Stage {
 }
 
 #[derive(Clone)]
-struct Player {
+pub struct Player {
     name: String,
     score: usize,
     rank: usize,
@@ -69,7 +69,7 @@ impl Player {
         Player {
             name: name.to_string(),
             score: 0,
-            rank: 0,
+            rank: 1,
         }
     }
 }
@@ -98,6 +98,7 @@ pub struct Tournament {
     race: usize,
     races: Vec<Race>,
     pub over: bool,
+    dead_player: Option<Player>,
 }
 impl Tournament {
     pub fn new() -> Self {
@@ -122,9 +123,10 @@ impl Tournament {
             race: 1,
             races,
             over: false,
+            dead_player: None,
         }
     }
-    fn rank_players(&mut self) -> Vec<Player> {
+    pub fn rank_players(&mut self) -> Vec<Player> {
         self.names.sort_by(|a, b| a.score.cmp(&b.score));
         self.names.reverse();
         let mut i = 0;
@@ -146,7 +148,6 @@ impl Tournament {
             .collect()
     }
     fn add_semi_races(&mut self) {
-        self.rank_players();
         let mut race = self.race + 1;
         for j in 0..2 {
             self.races.push(Race::new(&self.names[j].name, &self.names[3 - j].name, race, 4));
@@ -157,10 +158,12 @@ impl Tournament {
 
     }
     fn add_bronze_races(&mut self) {
-
+        self.rank_players();
+        self.races.push(Race::new(&self.names[2].name, &self.names[3].name, self.race + 1, 4));
     }
     fn add_gold_races(&mut self) {
-
+        self.rank_players();
+        self.races.push(Race::new(&self.names[0].name, &self.names[1].name, self.race + 1, 4));
     }
     fn clear_player_scores(&mut self) {
         for name in self.names.iter_mut() {
@@ -182,14 +185,12 @@ impl Tournament {
                     self.add_semi_races();
                 },
                 BRONZE => {
-                    self.clear_player_scores();
                     self.add_bronze_races();
                     for i in 0..2 {
                         self.names[i].score = 10;
                     }
                 },
                 GOLD => {
-                    self.clear_player_scores();
                     self.add_gold_races();
                 },
                 GROUP => unreachable!()
@@ -216,12 +217,11 @@ impl Tournament {
     }
     fn cull_player(&mut self) -> bool {
         let original_length = self.names.len();
-        self.names = self
-            .rank_players()
-            .iter_mut()
-            .filter(|a| a.rank != RACERS)
-            .map(|a| a.clone())
-            .collect();
+        for name in self.rank_players().iter_mut() {
+            if name.rank == RACERS {
+                self.dead_player = self.names.pop();
+            }
+        }
         original_length != self.names.len()
     }
 }
@@ -278,23 +278,18 @@ impl Display {
         self.stage.set_text(&stage.to_string());
     }
     pub fn display_ranks(&mut self) {
-        self.tournament.rank_players();
-        let mut start_range = 0;
-        let mut end_range = self.tournament.names.len();
-        if self.tournament.stage == BRONZE {
-            start_range = 2;
-            for i in 0..2 {
-                self.ranks[i].set_text(&format!("#{}: {}", self.tournament.names[i].rank, self.tournament.names[i].name));
+        for i in 0..self.tournament.names.len() {
+            let mut win = String::new();
+            if self.tournament.stage == GROUP {
+                win = format!("({} wins)", self.tournament.names[i].score);
             }
-        } else if self.tournament.stage == GOLD {
-            end_range = 2;
-        }
-        for i in start_range..end_range {
             self.ranks[i].set_text(&format!(
-                "#{}: {} ({} wins)",
-                self.tournament.names[i].rank, self.tournament.names[i].name,
-                self.tournament.names[i].score
+                "#{}: {} {}",
+                self.tournament.names[i].rank, self.tournament.names[i].name, win
             ));
+        }
+        if let Some(player) = self.tournament.dead_player.take() {
+            self.ranks[RACERS - 1].set_text(&format!("#{}: {}", RACERS, player.name));
         }
     }
 }
