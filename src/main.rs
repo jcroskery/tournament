@@ -35,7 +35,6 @@ fn main() {
             let mut display = display_1.borrow_mut();
             if !display.tournament.over {
                 display.tournament.record_winner(true);
-                display.display_ranks();
             }
             if !display.tournament.next_race() {
                 if !display.tournament.next_stage() {
@@ -43,6 +42,7 @@ fn main() {
                 }
             }
             if !display.tournament.over {
+                display.display_ranks();
                 display.display_race();
             }
         });
@@ -50,7 +50,6 @@ fn main() {
             let mut display = display_2.borrow_mut();
             if !display.tournament.over {
                 display.tournament.record_winner(false);
-                display.display_ranks();
             }
             if !display.tournament.next_race() {
                 if !display.tournament.next_stage() {
@@ -58,6 +57,7 @@ fn main() {
                 }
             }
             if !display.tournament.over {
+                display.display_ranks();
                 display.display_race();
             }
         });
