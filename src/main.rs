@@ -3,6 +3,9 @@ use gtk::prelude::*;
 use gdk::Screen;
 use gtk::{Application, ApplicationWindow, Builder, CssProvider, StyleContext, Window};
 
+use std::rc::Rc;
+use std::cell::RefCell;
+
 mod tournament;
 use tournament::{Display, Tournament};
 
@@ -19,9 +22,27 @@ fn main() {
         let window: Window = builder.get_object("mainWindow").unwrap();
         let tournament = Tournament::new();
         let mut display = Display::new(builder, tournament);
-        display.connect_refresh();
-        display.connect_buttons_clicked();
         display.display_ranks();
+        display.display_race(1);
+        display.display_stage();
+        let win_button_1 = display.win_button_1.clone();
+        let win_button_2 = display.win_button_2.clone();
+        let refresh = display.refresh.clone();
+        let display_1 = Rc::new(RefCell::new(display));
+        let display_2 = display_1.clone();
+        let display_3 = display_2.clone();
+        win_button_1.connect_clicked(move |_| {
+            let display = display_1.borrow();
+            display.display_race(2);
+        });
+        win_button_2.connect_clicked(move |_| {
+            let display = display_2.borrow();
+            display.display_race(4);
+        });
+        refresh.connect_clicked(move |_| {
+            let display = display_3.borrow();
+            display.display_race(3);
+        });
         window.show_all();
     });
     application.run(&[]);
