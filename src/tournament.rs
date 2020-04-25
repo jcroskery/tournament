@@ -129,17 +129,17 @@ impl Tournament {
         self.names.sort_by(|a, b| a.score.cmp(&b.score));
         self.names.reverse();
         let mut i = 0;
-        let mut last_score = RACERS + 1;
+        let mut last_score = None;
         let mut last_rank = 0;
         self.names
             .iter_mut()
             .map(|a| {
                 i += 1;
-                if a.score == last_score {
+                if last_score != None && a.score == last_score.unwrap() {
                     a.rank = last_rank;
                 } else {
                     a.rank = i;
-                    last_score = a.score;
+                    last_score = Some(a.score);
                     last_rank = a.rank;
                 }
                 a.clone()
@@ -156,17 +156,17 @@ impl Tournament {
     fn add_tiebreaker_races(&mut self) {
         self.rank_players();
         let mut lowest_rank = 1;
-        let new_players: Vec<_> = self.names.iter_mut().rev().filter_map(|x| {
-            if x.rank > lowest_rank {
-                lowest_rank = x.rank;
-                Some(x)
-            } else if x.rank != lowest_rank {
-                x.score += 10;
-                return None;
+        let mut new_players = vec![];
+        for player in self.names.iter_mut().rev() {
+            if player.rank > lowest_rank {
+                lowest_rank = player.rank;
+                new_players.push(player);
+            } else if player.rank != lowest_rank {
+                player.score += 10;
             } else {
-                return Some(x)
+                new_players.push(player);
             }
-        }).collect();
+        }
         let mut race = self.race + 1;
         for i in 0..new_players.len() {
             for j in (i + 1)..new_players.len() {
