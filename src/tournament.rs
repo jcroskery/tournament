@@ -83,7 +83,6 @@ pub struct Tournament {
 }
 impl Tournament {
     pub fn new() -> Self {
-        let mut race = 1;
         let names = vec![
             Player::new("Justus"),
             Player::new("Faith"),
@@ -92,20 +91,23 @@ impl Tournament {
             Player::new("Daddy"),
         ];
         let mut races = vec![];
+        let mut race = 1;
         for i in 0..RACERS {
             for j in (i + 1)..RACERS {
                 races.push(Race::new(&names[i].name, &names[j].name, race, 1, 1));
+                race += 1;
             }
         }
         Tournament {
             stage: GROUP,
             names,
-            race,
+            race: 1,
             races,
         }
     }
     fn rank_players(&mut self) -> Vec<Player> {
         self.names.sort_by(|a, b| a.score.cmp(&b.score));
+        self.names.reverse();
         let mut i = 0;
         let mut last_score = RACERS + 1;
         let mut last_rank = 0;
@@ -124,15 +126,31 @@ impl Tournament {
             })
             .collect()
     }
-    pub fn next_race(&mut self) {
+    pub fn next_race(&mut self) -> bool {
         self.race += 1;
         let mut deleted = 0;
-        self.races = self.races.iter_mut().filter(|x| {
-            deleted += 1;
-            deleted != 1
-        }).map(|x| x.clone()).collect();
-        if self.races.len() == 0 {
-            panic!();
+        self.races = self
+            .races
+            .iter_mut()
+            .filter(|x| {
+                deleted += 1;
+                deleted != 1
+            })
+            .map(|x| x.clone())
+            .collect();
+        self.races.len() != 0
+    }
+    pub fn record_winner(&mut self, winner: bool) {
+        let name = if winner {
+            &self.races[0].racer_1
+        } else {
+            &self.races[0].racer_2
+        };
+        for player in self.names.iter_mut() {
+            if &player.name == name {
+                player.score += 1;
+                println!("{}", player.score);
+            }
         }
     }
     fn cull_player(&mut self) -> bool {
@@ -190,8 +208,7 @@ impl Display {
         self.vs.set_text(&format!("{} vs {}", racer_1, racer_2));
         self.current_races.set_text(&format!(
             "Race {} of {}",
-            self.tournament.races[0].sub_race,
-            self.tournament.races[0].length
+            self.tournament.races[0].sub_race, self.tournament.races[0].length
         ));
         self.race.set_text(&format!("Race {}:", race));
     }
@@ -204,8 +221,9 @@ impl Display {
         self.tournament.rank_players();
         for i in 0..RACERS {
             self.ranks[i].set_text(&format!(
-                "#{}: {}",
-                self.tournament.names[i].rank, self.tournament.names[i].name
+                "#{}: {} ({} wins)",
+                self.tournament.names[i].rank, self.tournament.names[i].name,
+                self.tournament.names[i].score
             ));
         }
     }

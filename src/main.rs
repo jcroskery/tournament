@@ -33,13 +33,17 @@ fn main() {
         let display_3 = display_2.clone();
         win_button_1.connect_clicked(move |_| {
             let mut display = display_1.borrow_mut();
+            display.tournament.record_winner(true);
             display.tournament.next_race();
             display.display_race();
+            display.display_ranks();
         });
         win_button_2.connect_clicked(move |_| {
             let mut display = display_2.borrow_mut();
+            display.tournament.record_winner(false);
             display.tournament.next_race();
             display.display_race();
+            display.display_ranks();
         });
         refresh.connect_clicked(move |_| {
             let display = display_3.borrow();
