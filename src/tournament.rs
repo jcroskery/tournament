@@ -2,6 +2,7 @@ use Stage::*;
 
 use gtk::prelude::*;
 use gtk::{Builder, Button, Label};
+use rand::prelude::*;
 
 const RACERS: usize = 5;
 
@@ -116,6 +117,7 @@ impl Tournament {
                 race += 1;
             }
         }
+        races.shuffle(&mut rand::thread_rng());
         Tournament {
             stage: GROUP,
             names,
