@@ -104,10 +104,10 @@ impl Tournament {
     pub fn new() -> Self {
         let names = vec![
             Player::new("Justus"),
-            Player::new("Faith"),
-            Player::new("Hope"),
-            Player::new("Mommy"),
-            Player::new("Daddy"),
+            Player::new("Monster"),
+            Player::new("Tugboat"),
+            Player::new("Piano"),
+            Player::new("Grape"),
         ];
         let mut races = vec![];
         let mut race = 1;
