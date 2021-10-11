@@ -5,6 +5,7 @@ use gtk::{Application, ApplicationWindow, Builder, CssProvider, StyleContext, Wi
 
 use std::cell::RefCell;
 use std::rc::Rc;
+use std::env;
 
 mod tournament;
 use tournament::{Display, Tournament};
@@ -23,8 +24,8 @@ fn main() {
         StyleContext::add_provider_for_screen(&Screen::get_default().unwrap(), &css, 1);
         let builder = Builder::new_from_string(include_str!("../window.ui"));
         let window: Window = builder.get_object("mainWindow").unwrap();
-        let tournament = Tournament::new();
-        let mut display = Display::new(builder, tournament);
+        let tournament = Tournament::new(env::args().collect());
+        let mut display = Display::new(builder.clone(), tournament);
         display.display_ranks();
         display.display_race();
         display.display_stage();
@@ -35,50 +36,14 @@ fn main() {
         let display_2 = display_1.clone();
         let display_3 = display_2.clone();
         win_button_1.connect_clicked(move |_| {
-            let mut display = display_1.borrow_mut();
-            if !display.tournament.over {
-                display.tournament.record_winner(true);
-                if !display.tournament.next_race() {
-                    if !display.tournament.next_stage() {
-                        display.tournament.over = true;
-                        display.tournament.rank_players();
-                        display.display_ranks();
-                    } else {
-                        display.display_ranks();
-                        display.display_race();
-                        display.display_stage();
-                    }
-                } else {
-                    display.tournament.rank_players();
-                    display.display_ranks();
-                    display.display_race();
-                }
-            }
+            display_1.borrow_mut().record_race(true);
         });
         win_button_2.connect_clicked(move |_| {
-            let mut display = display_2.borrow_mut();
-            if !display.tournament.over {
-                display.tournament.record_winner(false);
-                if !display.tournament.next_race() {
-                    if !display.tournament.next_stage() {
-                        display.tournament.over = true;
-                        display.tournament.rank_players();
-                        display.display_ranks();
-                    } else {
-                        display.display_ranks();
-                        display.display_stage();
-                        display.display_race();
-                    }
-                } else {
-                    display.tournament.rank_players();
-                    display.display_ranks();
-                    display.display_race();
-                }
-            }
+            display_2.borrow_mut().record_race(false);
         });
         refresh.connect_clicked(move |_| {
-            let display = display_3.borrow();
-            display.display_race();
+            let tournament = Tournament::new(env::args().collect());
+            display_3.borrow_mut().reset(tournament);
         });
         window.show_all();
     });

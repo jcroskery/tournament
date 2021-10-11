@@ -1,10 +1,8 @@
 use Stage::*;
 
 use gtk::prelude::*;
-use gtk::{Builder, Button, Label};
+use gtk::{Box, Builder, Button, Label, Orientation, Separator};
 use rand::prelude::*;
-
-const RACERS: usize = 5;
 
 #[derive(Clone, PartialEq)]
 enum Stage {
@@ -38,7 +36,7 @@ impl Stage {
             GROUP => {
                 *self = SEMI;
                 true
-            },
+            }
             TIEBREAKER => {
                 *self = SEMI;
                 true
@@ -46,14 +44,12 @@ impl Stage {
             SEMI => {
                 *self = BRONZE;
                 true
-            },
+            }
             BRONZE => {
                 *self = GOLD;
                 true
-            },
-            GOLD => {
-                false
             }
+            GOLD => false,
         }
     }
 }
@@ -97,22 +93,18 @@ pub struct Tournament {
     names: Vec<Player>,
     race: usize,
     races: Vec<Race>,
+    racers: usize,
     pub over: bool,
     dead_player: Option<Player>,
 }
 impl Tournament {
-    pub fn new() -> Self {
-        let names = vec![
-            Player::new("Justus"),
-            Player::new("Monster"),
-            Player::new("Tugboat"),
-            Player::new("Piano"),
-            Player::new("Grape"),
-        ];
+    pub fn new(names: Vec<String>) -> Self {
+        let names: Vec<_> = names.into_iter().skip(1).map(|s| Player::new(&s)).collect();
         let mut races = vec![];
+        let racers = names.len();
         let mut race = 1;
-        for i in 0..RACERS {
-            for j in (i + 1)..RACERS {
+        for i in 0..racers {
+            for j in (i + 1)..racers {
                 races.push(Race::new(&names[i].name, &names[j].name, race, 1));
                 race += 1;
             }
@@ -123,6 +115,7 @@ impl Tournament {
             names,
             race: 1,
             races,
+            racers,
             over: false,
             dead_player: None,
         }
@@ -151,7 +144,12 @@ impl Tournament {
     fn add_semi_races(&mut self) {
         let mut race = self.race + 1;
         for j in 0..2 {
-            self.races.push(Race::new(&self.names[j].name, &self.names[3 - j].name, race, 4));
+            self.races.push(Race::new(
+                &self.names[j].name,
+                &self.names[3 - j].name,
+                race,
+                4,
+            ));
             race += 1;
         }
     }
@@ -172,18 +170,33 @@ impl Tournament {
         let mut race = self.race + 1;
         for i in 0..new_players.len() {
             for j in (i + 1)..new_players.len() {
-                self.races.push(Race::new(&new_players[i].name, &new_players[j].name, race, 1));
+                self.races.push(Race::new(
+                    &new_players[i].name,
+                    &new_players[j].name,
+                    race,
+                    1,
+                ));
                 race += 1;
             }
         }
     }
     fn add_bronze_races(&mut self) {
         self.rank_players();
-        self.races.push(Race::new(&self.names[2].name, &self.names[3].name, self.race + 1, 4));
+        self.races.push(Race::new(
+            &self.names[2].name,
+            &self.names[3].name,
+            self.race + 1,
+            4,
+        ));
     }
     fn add_gold_races(&mut self) {
         self.rank_players();
-        self.races.push(Race::new(&self.names[0].name, &self.names[1].name, self.race + 1, 4));
+        self.races.push(Race::new(
+            &self.names[0].name,
+            &self.names[1].name,
+            self.race + 1,
+            4,
+        ));
     }
     fn clear_player_scores(&mut self) {
         for name in self.names.iter_mut() {
@@ -196,7 +209,7 @@ impl Tournament {
                 self.stage = TIEBREAKER;
                 self.add_tiebreaker_races();
                 return true;
-            } 
+            }
         }
         let is_there_a_next_stage = self.stage.next_stage();
         if is_there_a_next_stage {
@@ -204,17 +217,17 @@ impl Tournament {
                 SEMI => {
                     self.clear_player_scores();
                     self.add_semi_races();
-                },
+                }
                 BRONZE => {
                     self.add_bronze_races();
                     for i in 0..2 {
                         self.names[i].score = 10;
                     }
-                },
+                }
                 GOLD => {
                     self.add_gold_races();
-                },
-                GROUP | TIEBREAKER => unreachable!()
+                }
+                GROUP | TIEBREAKER => unreachable!(),
             }
         }
         is_there_a_next_stage
@@ -239,7 +252,7 @@ impl Tournament {
     fn cull_player(&mut self) -> bool {
         let original_length = self.names.len();
         for name in self.rank_players().iter_mut() {
-            if name.rank == RACERS {
+            if name.rank == self.racers {
                 self.dead_player = self.names.pop();
             }
         }
@@ -258,13 +271,22 @@ pub struct Display {
     ccs: Label,
     current_races: Label,
     stage: Label,
+    centre_box: Box,
+    right_box: Box,
 }
 
 impl Display {
     pub fn new(builder: Builder, tournament: Tournament) -> Self {
+        let rank_box: Box = builder.get_object("rankbox").unwrap();
         let mut ranks = vec![];
-        for i in 0..RACERS {
-            ranks.push(builder.get_object(&format!("rank_{}", i)).unwrap());
+        for i in 0..tournament.racers {
+            let rank = Label::new(Some(&format!("rank_{}", i)));
+            ranks.push(rank.clone());
+            rank_box.add(&rank);
+            if i + 1 != tournament.racers {
+                let separator = Separator::new(Orientation::Horizontal);
+                rank_box.add(&separator);
+            }
         }
         Display {
             tournament,
@@ -277,6 +299,43 @@ impl Display {
             ccs: builder.get_object("ccs").unwrap(),
             current_races: builder.get_object("current_races").unwrap(),
             stage: builder.get_object("stage").unwrap(),
+            centre_box: builder.get_object("centrebox").unwrap(),
+            right_box: builder.get_object("rightbox").unwrap(),
+        }
+    }
+    pub fn reset(&mut self, tournament: Tournament) {
+        self.tournament = tournament;
+        for gbox in [&self.centre_box, &self.right_box] {
+            gbox.show();
+        }
+        self.display_race();
+        self.display_stage();
+        self.display_ranks();
+    }
+    pub fn record_race(&mut self, winner: bool) {
+        if !self.tournament.over {
+            self.tournament.record_winner(winner);
+            if !self.tournament.next_race() {
+                if !self.tournament.next_stage() {
+                    self.tournament.over = true;
+                    self.tournament.rank_players();
+                    self.clear_extraneous_info();
+                    self.display_ranks();
+                } else {
+                    self.display_ranks();
+                    self.display_race();
+                    self.display_stage();
+                }
+            } else {
+                self.tournament.rank_players();
+                self.display_ranks();
+                self.display_race();
+            }
+        }
+    }
+    pub fn clear_extraneous_info(&self) {
+        for gbox in [&self.centre_box, &self.right_box] {
+            gbox.hide();
         }
     }
     pub fn display_race(&self) {
@@ -286,9 +345,8 @@ impl Display {
         self.win_button_1.set_label(&format!("{} won", racer_1));
         self.win_button_2.set_label(&format!("{} won", racer_2));
         self.vs.set_text(&format!("{} vs {}", racer_1, racer_2));
-        self.current_races.set_text(&format!(
-            "{} Race(s)", self.tournament.races[0].length
-        ));
+        self.current_races
+            .set_text(&format!("{} Race(s)", self.tournament.races[0].length));
         self.race.set_text(&format!("Match {}:", race));
     }
     pub fn display_stage(&self) {
@@ -308,7 +366,8 @@ impl Display {
             ));
         }
         if let Some(player) = self.tournament.dead_player.take() {
-            self.ranks[RACERS - 1].set_text(&format!("#{}: {}", RACERS, player.name));
+            self.ranks[self.tournament.racers - 1]
+                .set_text(&format!("#{}: {}", self.tournament.racers, player.name));
         }
     }
 }

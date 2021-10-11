@@ -1,183 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.22.2 -->
+<!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <!-- interface-css-provider-path tournament.css -->
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
     <property name="stock">gtk-refresh</property>
   </object>
   <object class="GtkWindow" id="mainWindow">
-    <property name="can_focus">False</property>
-    <child type="titlebar">
-      <object class="GtkHeaderBar">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="title">Tournament</property>
-        <property name="show_close_button">True</property>
-        <child>
-          <object class="GtkButton" id="refresh">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="image">image1</property>
-            <property name="always_show_image">True</property>
-          </object>
-          <packing>
-            <property name="pack_type">end</property>
-          </packing>
-        </child>
-        <style>
-          <class name="header"/>
-        </style>
-      </object>
-    </child>
+    <property name="can-focus">False</property>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <child>
-          <object class="GtkBox">
+          <object class="GtkBox" id="rankbox">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="valign">start</property>
-            <property name="margin_left">5</property>
-            <property name="margin_right">5</property>
-            <property name="margin_top">5</property>
-            <property name="margin_bottom">5</property>
+            <property name="margin-left">5</property>
+            <property name="margin-right">5</property>
+            <property name="margin-top">5</property>
+            <property name="margin-bottom">5</property>
             <property name="orientation">vertical</property>
             <child>
-              <object class="GtkLabel" id="rank_0">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="halign">start</property>
-                <property name="margin_left">2</property>
-                <property name="margin_right">2</property>
-                <property name="margin_top">2</property>
-                <property name="margin_bottom">2</property>
-                <property name="label" translatable="yes">#1: Justus</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
+              <placeholder/>
             </child>
             <child>
-              <object class="GtkSeparator" id="separator_1">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
+              <placeholder/>
             </child>
             <child>
-              <object class="GtkLabel" id="rank_1">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="halign">start</property>
-                <property name="margin_left">2</property>
-                <property name="margin_right">2</property>
-                <property name="margin_top">2</property>
-                <property name="margin_bottom">2</property>
-                <property name="label" translatable="yes">#2: Faith</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">2</property>
-              </packing>
+              <placeholder/>
             </child>
             <child>
-              <object class="GtkSeparator" id="separator_2">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
+              <placeholder/>
             </child>
             <child>
-              <object class="GtkLabel" id="rank_2">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="halign">start</property>
-                <property name="margin_left">2</property>
-                <property name="margin_right">2</property>
-                <property name="margin_top">2</property>
-                <property name="margin_bottom">2</property>
-                <property name="label" translatable="yes">#3: Hope</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">4</property>
-              </packing>
+              <placeholder/>
             </child>
             <child>
-              <object class="GtkSeparator" id="separator_3">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">5</property>
-              </packing>
+              <placeholder/>
             </child>
             <child>
-              <object class="GtkLabel" id="rank_3">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="halign">start</property>
-                <property name="margin_left">2</property>
-                <property name="margin_right">2</property>
-                <property name="margin_top">2</property>
-                <property name="margin_bottom">2</property>
-                <property name="label" translatable="yes">#4: Mommy</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">6</property>
-              </packing>
+              <placeholder/>
             </child>
             <child>
-              <object class="GtkSeparator" id="separator_4">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">8</property>
-              </packing>
+              <placeholder/>
             </child>
             <child>
-              <object class="GtkLabel" id="rank_4">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="halign">start</property>
-                <property name="margin_left">2</property>
-                <property name="margin_right">2</property>
-                <property name="margin_top">2</property>
-                <property name="margin_bottom">2</property>
-                <property name="label" translatable="yes">#5: Daddy</property>
-                <style>
-                  <class name="red"/>
-                </style>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">9</property>
-              </packing>
+              <placeholder/>
             </child>
             <style>
               <class name="border"/>
@@ -192,22 +64,21 @@
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="valign">center</property>
-            <property name="margin_left">40</property>
-            <property name="margin_right">40</property>
-            <property name="margin_top">50</property>
-            <property name="margin_bottom">50</property>
+            <property name="margin-left">40</property>
+            <property name="margin-right">40</property>
+            <property name="margin-top">50</property>
+            <property name="margin-bottom">50</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkLabel" id="race">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_left">5</property>
-                <property name="margin_right">5</property>
-                <property name="margin_top">2</property>
-                <property name="margin_bottom">2</property>
-                <property name="label" translatable="yes">Race 1:</property>
+                <property name="can-focus">False</property>
+                <property name="margin-left">5</property>
+                <property name="margin-right">5</property>
+                <property name="margin-top">2</property>
+                <property name="margin-bottom">2</property>
                 <style>
                   <class name="large"/>
                 </style>
@@ -221,12 +92,11 @@
             <child>
               <object class="GtkLabel" id="vs">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_left">5</property>
-                <property name="margin_right">5</property>
-                <property name="margin_top">5</property>
-                <property name="margin_bottom">5</property>
-                <property name="label" translatable="yes">Justus vs Faith</property>
+                <property name="can-focus">False</property>
+                <property name="margin-left">5</property>
+                <property name="margin-right">5</property>
+                <property name="margin-top">5</property>
+                <property name="margin-bottom">5</property>
                 <style>
                   <class name="medium_large"/>
                 </style>
@@ -240,17 +110,16 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkButton" id="win_button_1">
-                    <property name="label" translatable="yes">Justus won</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="margin_left">5</property>
-                    <property name="margin_right">5</property>
-                    <property name="margin_top">5</property>
-                    <property name="margin_bottom">5</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="margin-left">5</property>
+                    <property name="margin-right">5</property>
+                    <property name="margin-top">5</property>
+                    <property name="margin-bottom">5</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -261,7 +130,7 @@
                 <child>
                   <object class="GtkSeparator">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -271,14 +140,13 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="win_button_2">
-                    <property name="label" translatable="yes">Faith won</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="margin_left">5</property>
-                    <property name="margin_right">5</property>
-                    <property name="margin_top">5</property>
-                    <property name="margin_bottom">5</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="margin-left">5</property>
+                    <property name="margin-right">5</property>
+                    <property name="margin-top">5</property>
+                    <property name="margin-bottom">5</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -303,21 +171,21 @@
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="valign">start</property>
-            <property name="margin_left">5</property>
-            <property name="margin_right">5</property>
-            <property name="margin_top">5</property>
-            <property name="margin_bottom">5</property>
+            <property name="margin-left">5</property>
+            <property name="margin-right">5</property>
+            <property name="margin-top">5</property>
+            <property name="margin-bottom">5</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkLabel">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_left">2</property>
-                <property name="margin_right">2</property>
-                <property name="margin_top">2</property>
-                <property name="margin_bottom">2</property>
+                <property name="can-focus">False</property>
+                <property name="margin-left">2</property>
+                <property name="margin-right">2</property>
+                <property name="margin-top">2</property>
+                <property name="margin-bottom">2</property>
                 <property name="label" translatable="yes">Race details:</property>
               </object>
               <packing>
@@ -329,7 +197,7 @@
             <child>
               <object class="GtkSeparator">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -340,12 +208,11 @@
             <child>
               <object class="GtkLabel" id="ccs">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_left">2</property>
-                <property name="margin_right">2</property>
-                <property name="margin_top">2</property>
-                <property name="margin_bottom">1</property>
-                <property name="label" translatable="yes">50 cc</property>
+                <property name="can-focus">False</property>
+                <property name="margin-left">2</property>
+                <property name="margin-right">2</property>
+                <property name="margin-top">2</property>
+                <property name="margin-bottom">1</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -356,12 +223,11 @@
             <child>
               <object class="GtkLabel" id="current_races">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_left">2</property>
-                <property name="margin_right">2</property>
-                <property name="margin_top">1</property>
-                <property name="margin_bottom">1</property>
-                <property name="label" translatable="yes">Race 1 of 1</property>
+                <property name="can-focus">False</property>
+                <property name="margin-left">2</property>
+                <property name="margin-right">2</property>
+                <property name="margin-top">1</property>
+                <property name="margin-bottom">1</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -372,12 +238,11 @@
             <child>
               <object class="GtkLabel" id="stage">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_left">2</property>
-                <property name="margin_right">2</property>
-                <property name="margin_top">1</property>
-                <property name="margin_bottom">2</property>
-                <property name="label" translatable="yes">Group stage</property>
+                <property name="can-focus">False</property>
+                <property name="margin-left">2</property>
+                <property name="margin-right">2</property>
+                <property name="margin-top">1</property>
+                <property name="margin-bottom">2</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -392,10 +257,33 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="pack_type">end</property>
+            <property name="pack-type">end</property>
             <property name="position">2</property>
           </packing>
         </child>
+      </object>
+    </child>
+    <child type="titlebar">
+      <object class="GtkHeaderBar">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="title">Tournament</property>
+        <property name="show-close-button">True</property>
+        <child>
+          <object class="GtkButton" id="refresh">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="image">image1</property>
+            <property name="always-show-image">True</property>
+          </object>
+          <packing>
+            <property name="pack-type">end</property>
+          </packing>
+        </child>
+        <style>
+          <class name="header"/>
+        </style>
       </object>
     </child>
   </object>
